@@ -202,6 +202,8 @@ This project does not access real devices, recover actual deleted files, monitor
 *Built with curiosity, creativity, and code.*
 
 </div>
+
+---
 ## 📜 License
 
 This project is licensed under the **MIT License**. You are free to use, modify, and distribute it.
