@@ -187,14 +187,21 @@ This project does not access real devices, recover actual deleted files, monitor
 ---
 ## 👨‍💻 Developed By
 
-Rohit Sawant
-Full Stack Developer 💻 · Freelancer 🚀 · Student 🎓
+<div align="center">
+
+### Rohit Sawant
+
+**Full Stack Developer | Freelancer | Student**
+
+<a href="https://github.com/rohitrrs18">
+  <img src="https://img.shields.io/badge/GitHub-rohitrrs18-181717?style=for-the-badge&logo=github" />
+</a>
 
 ---
 
-<div align="center">
+*Built with curiosity, creativity, and code.*
 
-Built with curiosity, creativity, and code.
+</div>
 ## 📜 License
 
 This project is licensed under the **MIT License**. You are free to use, modify, and distribute it.
