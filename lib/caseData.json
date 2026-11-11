@@ -1,0 +1,350 @@
+{
+  "case": {
+    "id": "case-001",
+    "title": "The Stolen Blueprint",
+    "subtitle": "Operation Blue Horizon",
+    "company": "NovaTech Industries",
+    "severity": "CRITICAL",
+    "status": "ACTIVE INVESTIGATION",
+    "brief": "A confidential satellite-guidance blueprint (BLUE_HORIZON_v7.blueprint) was exfiltrated from NovaTech Industries' secure R&D server on the night of March 14. External monitoring flagged an unauthorized outbound transfer at 23:47. Four employees had access that night. One of them is the leaker. Examine the seized workstation image, recover what was deleted, and cross-reference the activity logs to identify the attacker.",
+    "victim": "NovaTech Industries — R&D Division",
+    "asset": "BLUE_HORIZON_v7.blueprint (Satellite Guidance Module)",
+    "incidentDate": "2025-03-14",
+    "incidentTime": "23:47",
+    "workstation": "WS-RND-04",
+    "culprit": "marcus"
+  },
+
+  "suspects": {
+    "priya": {
+      "id": "priya",
+      "name": "Priya Nair",
+      "role": "Senior Systems Analyst",
+      "workstation": "WS-RND-04",
+      "clearance": "Level 4 (Top Secret)",
+      "alibi": "Claims she left the office at 18:30 and was home by 19:15. Says she never logged back in.",
+      "motive": "Recently passed over for a promotion. Visible frustration with management.",
+      "avatar": "PN",
+      "accent": "#22d3ee"
+    },
+    "marcus": {
+      "id": "marcus",
+      "name": "Marcus Vale",
+      "role": "DevOps Engineer",
+      "workstation": "WS-RND-07",
+      "clearance": "Level 4 (Top Secret)",
+      "alibi": "Claims he was on a 23:00 maintenance call and only touched server infrastructure, not the blueprint.",
+      "motive": "Undisclosed debt. A crypto wallet was flagged in financial screening last month.",
+      "avatar": "MV",
+      "accent": "#fbbf24"
+    },
+    "elena": {
+      "id": "elena",
+      "name": "Elena Rusakova",
+      "role": "Security Auditor",
+      "workstation": "WS-RND-12",
+      "clearance": "Level 5 (Audit)",
+      "alibi": "Says she was running an overnight compliance audit and was in the office until 01:00.",
+      "motive": "None known — recently awarded a performance bonus.",
+      "avatar": "ER",
+      "accent": "#4ade80"
+    },
+    "david": {
+      "id": "david",
+      "name": "David Okafor",
+      "role": "Junior Developer",
+      "workstation": "WS-RND-19",
+      "clearance": "Level 2 (Restricted)",
+      "alibi": "Claims he was asleep at home. His badge shows exit at 17:45.",
+      "motive": "Financial stress (student loans). Recently denied a raise.",
+      "avatar": "DO",
+      "accent": "#f87171"
+    }
+  },
+
+  "files": [
+    {
+      "id": "f-blueprint",
+      "name": "BLUE_HORIZON_v7.blueprint",
+      "path": "/secure/rnd/blueprints/",
+      "type": "BLUEPRINT",
+      "size": "48.2 MB",
+      "modified": "2025-03-14 23:46:11",
+      "hash": "a91f2c…7de4",
+      "owner": "nova-rd",
+      "suspicious": true,
+      "content": "=== NOVATECH INDUSTRIES — CONFIDENTIAL ===\nCLASSIFICATION: TOP SECRET\nPROJECT: BLUE HORIZON (Satellite Guidance Module)\nVERSION: 7.0\n\n[ENCRYPTED PAYLOAD — 48.2 MB]\nAccess log: last opened 2025-03-14 23:46:11 by session 'svc-maint'.\n\nNOTE: This file was accessed outside approved window (09:00–19:00).\nOutbound copy attempt detected at 23:47.",
+      "clue": "The blueprint was opened at 23:46 under session 'svc-maint' — a service account, not a normal user.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "f-svc-cred",
+      "name": "svc-maint.cred",
+      "path": "/etc/novatech/credentials/",
+      "type": "CREDENTIAL",
+      "size": "2 KB",
+      "modified": "2025-03-10 14:22:03",
+      "hash": "b33d0a…9f1c",
+      "owner": "root",
+      "suspicious": true,
+      "content": "SERVICE ACCOUNT: svc-maint\nPURPOSE: Automated server maintenance\nDEFAULT PASSWORD: Maint#2024! (NOT CHANGED)\nLAST USED: 2025-03-14 23:46:09\nLAST IP: 10.20.4.71 (WS-RND-07)\n\nWARNING: Service credentials must not be used for interactive login.",
+      "clue": "svc-maint credentials were never rotated and were last used from IP 10.20.4.71 — which belongs to workstation WS-RND-07.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "f-notes",
+      "name": "TODO_notes.txt",
+      "path": "/home/mvale/Desktop/",
+      "type": "TEXT",
+      "size": "1.1 KB",
+      "modified": "2025-03-13 20:14:55",
+      "hash": "c44e1b…2a7d",
+      "owner": "mvale",
+      "suspicious": false,
+      "content": "TODO:\n- rotate svc-maint password (been meaning to for months)\n- finish server patch cycle\n- reply to Diana about weekend\n- check crypto wallet — need to move funds before Friday\n\nRemember: don't touch the blueprint dir, that's Priya's area.",
+      "clue": "Marcus Vale owns this file. It confirms he had svc-maint credentials AND an urgent need to move crypto funds before Friday.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "f-cryptonote",
+      "name": "wallet_seed.txt",
+      "path": "/home/mvale/.hidden/",
+      "type": "SECRET",
+      "size": "512 B",
+      "modified": "2025-03-14 23:30:02",
+      "hash": "d55f9c…3b8e",
+      "owner": "mvale",
+      "suspicious": true,
+      "content": "--- ENCRYPTED WALLET SEED ---\nwallet: bc1q…x9w2\nbalance: 0.00 BTC\nlast_tx: INCOMING 2025-03-15 00:12  (pending)\n\nNote to self: delete this after transfer confirmed.",
+      "clue": "A hidden crypto wallet seed file created at 23:30, minutes before the leak. An incoming transfer landed 00:12 — right after the exfiltration.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "f-audit-script",
+      "name": "audit_runner.sh",
+      "path": "/home/erusakova/scripts/",
+      "type": "SCRIPT",
+      "size": "3.4 KB",
+      "modified": "2025-03-14 22:05:44",
+      "hash": "e66a2f…4c9f",
+      "owner": "erusakova",
+      "suspicious": false,
+      "content": "#!/bin/bash\n# Overnight compliance audit — Elena Rusakova\necho 'Starting audit...'\nnmap -sV 10.20.0.0/24 > /var/log/audit/scan_$(date +%F).log\nfind /secure -type f -newermt '2025-03-14 23:00' -ls >> /var/log/audit/changes.log\necho 'Audit complete.'",
+      "clue": "Elena's audit script only READS and LOGS. It does not copy or transmit any files. Consistent with her alibi.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "f-david-resume",
+      "name": "resume_2025.pdf",
+      "path": "/home/dokafor/Documents/",
+      "type": "PDF",
+      "size": "210 KB",
+      "modified": "2025-03-12 09:41:18",
+      "hash": "f77b3a…5d0a",
+      "owner": "dokafor",
+      "suspicious": false,
+      "content": "DAVID OKAFOR — Junior Developer\nSeeking new opportunities.\n\nSkills: JavaScript, Python, basic networking.\nNote: current role lacks growth. Actively interviewing.",
+      "clue": "David is job-hunting. Motive to leave, but no evidence linking him to the blueprint or the svc-maint account.",
+      "evidencePoints": 1
+    }
+  ],
+
+  "messages": [
+    {
+      "id": "m1",
+      "from": "Marcus Vale",
+      "to": "Unknown (#darkpool)",
+      "timestamp": "2025-03-14 22:58:11",
+      "deleted": true,
+      "content": "got access. using the maintenance account so it looks like routine work. file moves tonight.",
+      "clue": "Marcus admits using the maintenance account to access something. Timestamp is before the leak.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "m2",
+      "from": "Unknown (#darkpool)",
+      "to": "Marcus Vale",
+      "timestamp": "2025-03-14 23:02:40",
+      "deleted": true,
+      "content": "good. blueprint only. 50k on delivery. delete everything after.",
+      "clue": "Buyer confirms target is the blueprint and offers 50k. Instructs deletion — explains the wiped messages.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "m3",
+      "from": "Marcus Vale",
+      "to": "Diana (personal)",
+      "timestamp": "2025-03-14 20:41:09",
+      "deleted": false,
+      "content": "I'll sort the money out this weekend, I promise. Just need one more day.",
+      "clue": "Personal message shows financial pressure — supports motive but is not direct evidence.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "m4",
+      "from": "Priya Nair",
+      "to": "Manager",
+      "timestamp": "2025-03-13 16:12:55",
+      "deleted": true,
+      "content": "I'm disappointed about the promotion decision but I'll keep my head down and focus on my work.",
+      "clue": "Priya is frustrated, but the tone is professional and she logged off early. Weak motive at best.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "m5",
+      "from": "David Okafor",
+      "to": "Recruiter",
+      "timestamp": "2025-03-12 11:03:27",
+      "deleted": false,
+      "content": "Thanks for the interview. I'll wait to hear back. Really hoping to move on soon.",
+      "clue": "David is interviewing elsewhere — motive to leave, but no link to the breach.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "m6",
+      "from": "Marcus Vale",
+      "to": "Unknown (#darkpool)",
+      "timestamp": "2025-03-14 23:49:33",
+      "deleted": true,
+      "content": "done. transfer sent. wipe the chat.",
+      "clue": "Sent 2 minutes after the outbound transfer at 23:47. Confirms Marcus completed and reported the leak.",
+      "evidencePoints": 2
+    }
+  ],
+
+  "browserHistory": [
+    {
+      "id": "b1",
+      "time": "2025-03-14 23:12:04",
+      "url": "https://darkpool-market.onion/listing/blueprint",
+      "title": "DarkPool — Blueprint Listings",
+      "profile": "mvale",
+      "risk": "HIGH",
+      "clue": "Marcus's profile visited a dark-web marketplace listing a blueprint for sale, 35 minutes before the leak.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "b2",
+      "time": "2025-03-14 23:14:52",
+      "url": "https://protonmail.com/login",
+      "title": "ProtonMail — Secure Email",
+      "profile": "mvale",
+      "risk": "HIGH",
+      "clue": "Marcus logged into a secure, encrypted email service right after browsing the dark-web listing.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "b3",
+      "time": "2025-03-14 22:40:17",
+      "url": "https://github.com/novatech-internal/infra-notes",
+      "title": "GitHub — infra-notes repo",
+      "profile": "mvale",
+      "risk": "MEDIUM",
+      "clue": "Marcus reviewed internal infra notes — consistent with preparing a service-account login.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "b4",
+      "time": "2025-03-14 23:05:33",
+      "url": "https://coinbase.com/portfolio",
+      "title": "Coinbase — Portfolio",
+      "profile": "mvale",
+      "risk": "MEDIUM",
+      "clue": "Marcus checked his crypto portfolio minutes before the breach window.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "b5",
+      "time": "2025-03-14 19:22:11",
+      "url": "https://linkedin.com/in/david-okafor",
+      "title": "LinkedIn — David Okafor",
+      "profile": "dokafor",
+      "risk": "LOW",
+      "clue": "David updated his LinkedIn — consistent with job-hunting, not with the breach.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "b6",
+      "time": "2025-03-14 22:51:40",
+      "url": "https://nist.gov/compliance-audit-checklist",
+      "title": "NIST — Audit Checklist",
+      "profile": "erusakova",
+      "risk": "LOW",
+      "clue": "Elena researched compliance audit procedures — consistent with her overnight audit.",
+      "evidencePoints": 1
+    }
+  ],
+
+  "logs": [
+    {
+      "id": "l1",
+      "time": "2025-03-14 18:30:12",
+      "event": "USER_LOGOFF",
+      "user": "pnair",
+      "source": "WS-RND-04",
+      "detail": "Priya Nair logged off and badge-exited the building.",
+      "clue": "Priya's session ended at 18:30 — she was gone hours before the breach.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "l2",
+      "time": "2025-03-14 23:46:09",
+      "event": "SERVICE_LOGIN",
+      "user": "svc-maint",
+      "source": "10.20.4.71 (WS-RND-07)",
+      "detail": "Service account 'svc-maint' authenticated interactively from Marcus Vale's workstation.",
+      "clue": "The service account logged in from WS-RND-07 — Marcus Vale's machine — at 23:46.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "l3",
+      "time": "2025-03-14 23:46:11",
+      "event": "FILE_ACCESS",
+      "user": "svc-maint",
+      "source": "/secure/rnd/blueprints/BLUE_HORIZON_v7.blueprint",
+      "detail": "Blueprint file opened under svc-maint session.",
+      "clue": "The blueprint was opened one second after the service login — same session.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "l4",
+      "time": "2025-03-14 23:47:02",
+      "event": "OUTBOUND_TRANSFER",
+      "user": "svc-maint",
+      "source": "10.20.4.71 → 185.220.101.44:443",
+      "detail": "48.2 MB outbound transfer to external IP flagged by monitoring.",
+      "clue": "The 48.2 MB transfer (matching the blueprint size) went to an external Tor exit node.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "l5",
+      "time": "2025-03-14 23:49:01",
+      "event": "SESSION_END",
+      "user": "svc-maint",
+      "source": "WS-RND-07",
+      "detail": "svc-maint session terminated; local temp files wiped.",
+      "clue": "Session ended 2 minutes after transfer; temp files wiped — anti-forensics behavior.",
+      "evidencePoints": 1
+    },
+    {
+      "id": "l6",
+      "time": "2025-03-15 00:12:44",
+      "event": "WALLET_INFLOW",
+      "user": "mvale",
+      "source": "blockchain (external)",
+      "detail": "Incoming crypto transfer to Marcus Vale's wallet.",
+      "clue": "Payment landed 25 minutes after the leak — matches the 50k offer in the recovered chat.",
+      "evidencePoints": 2
+    },
+    {
+      "id": "l7",
+      "time": "2025-03-14 23:00:00",
+      "event": "AUDIT_START",
+      "user": "erusakova",
+      "source": "WS-RND-12",
+      "detail": "Elena's compliance audit script started; read-only operations only.",
+      "clue": "Elena's audit only read and logged — no copy or transfer activity.",
+      "evidencePoints": 1
+    }
+  ]
+}
