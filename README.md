@@ -185,7 +185,16 @@ CIPHERSCENE is an educational digital forensics simulation. All files, messages,
 This project does not access real devices, recover actual deleted files, monitor browser activity, or perform forensic analysis on external systems.
 
 ---
+## 👨‍💻 Developed By
 
+Rohit Sawant
+Full Stack Developer 💻 · Freelancer 🚀 · Student 🎓
+
+---
+
+<div align="center">
+
+Built with curiosity, creativity, and code.
 ## 📜 License
 
 This project is licensed under the **MIT License**. You are free to use, modify, and distribute it.
